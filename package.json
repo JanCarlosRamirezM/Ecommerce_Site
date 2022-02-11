@@ -1,0 +1,29 @@
+{
+  "name": "ecommerce_site",
+  "version": "1.0.0",
+  "description": "MERN Stack Full Ecommerce Site - Using React, Redux, Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev":  "SET NODE_ENV=DEVELOPMENT&nodemon backend/server.js",
+    "prod": "SET NODE_ENV=PRODUCTION&nodemon backend/server.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JanCarlosRamirezM/Ecommerce_Site.git"
+  },
+  "keywords": [],
+  "author": "JanCarlosRamirez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JanCarlosRamirezM/Ecommerce_Site/issues"
+  },
+  "homepage": "https://github.com/JanCarlosRamirezM/Ecommerce_Site#readme",
+  "dependencies": {
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2",
+    "mongoose": "^6.1.8",
+    "nodemon": "^2.0.15"
+  }
+}
