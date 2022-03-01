@@ -43,3 +43,31 @@ exports.getSingleProduct = async (req, res, next) => {
     product,
   });
 };
+
+// --------------------------------------------
+// Update product => /api/v1/product/:id
+// --------------------------------------------
+exports.updateProduct = async (req, res, next) => {
+  const id = req.params.id;
+  let product = await Product.findById(id);
+
+  if (!product) {
+    return res.status(400).json({
+      success: false,
+      message: "Product not found",
+    });
+  }
+
+  product = req.body;
+
+  product = await Product.findByIdAndUpdate(id, product, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  return res.status(200).json({
+    success: true,
+    product,
+  });
+};
