@@ -101,7 +101,6 @@ exports.forgotPassword = CatchAsyncErrors(async (req, res, next) => {
 // reset password => /api/v1/auth/password/reset/:token
 // --------------------------------------------
 exports.resetPassword = CatchAsyncErrors(async (req, res, next) => {
-  
   const { token } = req.params;
 
   // Hash URL token
@@ -136,4 +135,17 @@ exports.resetPassword = CatchAsyncErrors(async (req, res, next) => {
   await user.save();
 
   sendToken(user, 200, res);
+});
+
+// --------------------------------------------
+// Get currently logged in user details => /api/v1/auth/me
+// --------------------------------------------
+exports.getUserProfile = CatchAsyncErrors(async (req, res, next) => {
+  const id = req.user.id;
+  const user = await User.findById(id);
+  
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
