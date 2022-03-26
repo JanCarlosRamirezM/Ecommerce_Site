@@ -5,7 +5,7 @@ const { emailAndPasswordEntered } = require("../utils/utilityFunctions");
 const sendToken = require("../utils/jwtToken");
 
 // --------------------------------------------
-// Register a user => /api/v1/user/register
+// Register a user => /api/v1/auth/register
 // --------------------------------------------
 exports.registerUser = CatchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -24,7 +24,7 @@ exports.registerUser = CatchAsyncErrors(async (req, res, next) => {
 });
 
 // --------------------------------------------
-// Login a user => /api/v1/user/login
+// Login a user => /api/v1/auth/login
 // --------------------------------------------
 exports.login = CatchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
@@ -39,5 +39,20 @@ exports.login = CatchAsyncErrors(async (req, res, next) => {
   if (!(await user.comparePassword(password)))
     return next(new ErrorHandler("Invalid email or password", 401));
 
-    sendToken(user, 200, res);
+  sendToken(user, 200, res);
+});
+
+// --------------------------------------------
+// Logout a user => /api/v1/auth/logout
+// --------------------------------------------
+exports.logout = CatchAsyncErrors(async (req, res, next) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logget out",
+  });
 });
