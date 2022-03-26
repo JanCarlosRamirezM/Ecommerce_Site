@@ -143,7 +143,31 @@ exports.resetPassword = CatchAsyncErrors(async (req, res, next) => {
 exports.getUserProfile = CatchAsyncErrors(async (req, res, next) => {
   const id = req.user.id;
   const user = await User.findById(id);
-  
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// --------------------------------------------
+// Update user profile => /api/v1/auth/me/update
+// --------------------------------------------
+exports.updateProfile = CatchAsyncErrors(async (req, res, next) => {
+  //  TODO: update avatar
+
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+
+  const id = req.user.id;
+  const user = await User.findByIdAndUpdate(id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
   res.status(200).json({
     success: true,
     user,
