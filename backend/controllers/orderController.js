@@ -26,3 +26,39 @@ exports.newOrder = CatchAsyncErrors(async (req, res, next) => {
     order,
   });
 });
+
+// --------------------------------------------
+// Get single order details => /api/v1/order/:id
+// --------------------------------------------
+exports.getSingleOrder = CatchAsyncErrors(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email"
+  );
+
+  if (!order) {
+    return next(new ErrorHandler("Order not fount", 400));
+  }
+
+  return res.status(200).json({
+    success: true,
+    order,
+  });
+});
+
+// --------------------------------------------
+// Get logged in user orders => /api/v1/order/me
+// --------------------------------------------
+exports.myOrders = CatchAsyncErrors(async (req, res, next) => {
+  const idUser = req.user.id;
+  const orders = await Order.find({ user: idUser });
+
+  if (!orders) {
+    return next(new ErrorHandler("Order not fount", 400));
+  }
+
+  return res.status(200).json({
+    success: true,
+    orders,
+  });
+});
