@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = mongoose.Schema({
   shippingInfo: {
     address: {
-      type: string,
+      type: String,
       required: true,
     },
     city: {
@@ -87,7 +87,7 @@ const orderSchema = mongoose.Schema({
     default: 0.0,
   },
   orderStatus: {
-    type: string,
+    type: String,
     required: true,
     default: "processing",
   },
@@ -96,7 +96,7 @@ const orderSchema = mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Data.now,
+    default: Date.now,
   },
 });
 
