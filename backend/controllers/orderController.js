@@ -64,9 +64,9 @@ exports.myOrders = CatchAsyncErrors(async (req, res, next) => {
 });
 
 // --------------------------------------------
-// Get all in user orders => /api/v1/order/admin
+// Get all orders - ADMIN => /api/v1/admin/order
 // --------------------------------------------
-exports.allOrdes = CatchAsyncErrors(async (req, res, next) => {
+exports.allOrders = CatchAsyncErrors(async (req, res, next) => {
   const orders = await Order.find().populate("user", "name email");
 
   let totalAmount = 0;
@@ -80,3 +80,38 @@ exports.allOrdes = CatchAsyncErrors(async (req, res, next) => {
     orders,
   });
 });
+
+// --------------------------------------------
+// Update / Process order- ADMIN => /api/v1/admin/order/:id
+// --------------------------------------------
+exports.updateOrder = CatchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+
+  if (!order) return next(new ErrorHandler("Order not fount", 400));
+
+  if (order.orderStatus === "Delivered")
+    return next(
+      new ErrorHandler("You have already delivered this order ", 400)
+    );
+
+  order.orderItem.forEach(async (item) => {
+    await updateStock(item.product, item.quantity);
+  });
+
+  order.orderStatus = req.body.orderStatus;
+  order.deliveredAt = Date.now();
+
+  await order.save();
+
+  return res.status(200).json({
+    success: true,
+  });
+});
+
+async function updateStock(idProduct, quantity) {
+  const product = await Product.findById(idProduct);
+
+  product.stock = product.stock - quantity;
+  await product.save({ validateBeforeSave: false });
+}
