@@ -185,6 +185,7 @@ exports.allUser = CatchAsyncErrors(async (req, res, next) => {
     users,
   });
 });
+
 // --------------------------------------------
 // Get user details => /api/v1/auth/admin/user/:id
 // --------------------------------------------
@@ -199,5 +200,48 @@ exports.getUserDetails = CatchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+// --------------------------------------------
+// Update user  => /api/v1/auth/admin/user/update/:id
+// --------------------------------------------
+exports.updateUser = CatchAsyncErrors(async (req, res, next) => {
+  //  TODO: update avatar
+
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  const { id } = req.params;
+  const user = await User.findByIdAndUpdate(id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+// --------------------------------------------
+// Delete user  => /api/v1/auth/admin/user/delete/:id
+// --------------------------------------------
+exports.deleteUser = CatchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+
+  if (!user)
+    return next(new ErrorHandler(`User does not found with id: ${id}`, 500));
+
+  await user.remove();
+
+  res.status(200).json({
+    success: true,
   });
 });
