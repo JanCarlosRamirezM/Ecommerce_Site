@@ -115,3 +115,19 @@ async function updateStock(idProduct, quantity) {
   product.stock = product.stock - quantity;
   await product.save({ validateBeforeSave: false });
 }
+
+// --------------------------------------------
+// Delete order- ADMIN => /api/v1/admin/order/:id
+// --------------------------------------------
+exports.deleteOrder = CatchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+  const order = await Order.findById(id);
+
+  if (!order) return next(new ErrorHandler("Order not fount", 400));
+
+  await order.remove();
+
+  return res.status(200).json({
+    success: true,
+  });
+});
