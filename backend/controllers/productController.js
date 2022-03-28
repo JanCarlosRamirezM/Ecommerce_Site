@@ -104,7 +104,6 @@ exports.deleteProduct = CatchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 // --------------------------------------------
 // Create new Review => /api/v1/product/review
 // --------------------------------------------
@@ -117,7 +116,7 @@ exports.createProductReview = CatchAsyncErrors(async (req, res, next) => {
     rating: Number(rating),
     comment,
   };
- 
+
   const product = await Product.findById(productId);
   const isReviewed = product.reviews.find(
     (r) => r.user.toString() === review.user.toString()
@@ -143,5 +142,26 @@ exports.createProductReview = CatchAsyncErrors(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
+  });
+});
+
+// --------------------------------------------
+// get product Reviews => /api/v1/product/reviews
+// --------------------------------------------
+exports.getProductReviews = CatchAsyncErrors(async (req, res, next) => {
+  const { id } = req.query;
+
+  let product = await Product.findById(id);
+
+  if (!product) {
+    return res.status(400).json({
+      success: false,
+      message: "Product not found",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    reviews: product.reviews,
   });
 });
