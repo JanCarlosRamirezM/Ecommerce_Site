@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import "../../App.css";
 
 function Header() {
@@ -7,7 +8,9 @@ function Header() {
       <nav className="navbar row">
         <div className="col-12 col-md-3">
           <div className="navbar-brand">
+
             <img src="/images/shopit_logo.png" alt="No available..." />
+
           </div>
         </div>
 
